@@ -21,6 +21,7 @@ app.post('/api/employee/create', async (req, res) => {
    try {
       const data = req.body
       await Employee.add({
+         keyId: data.keyId,
          position_id: data.position_id,
          position: data.position_id,
          nickname_th: data.nickname_th,
@@ -47,13 +48,5 @@ app.post('/api/employee/create', async (req, res) => {
       })
    }
 })
-
-// app.get('/', (req, res) => {
-//    res.send('This is my API runing...')
-// })
-
-// app.get('/about', (req, res) => {
-//    res.send('This is my about route...')
-// })
 
 module.exports = app
