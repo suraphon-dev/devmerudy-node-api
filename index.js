@@ -11,6 +11,7 @@ app.listen(PORT, () => {
    console.log(`API Listening on PORT ${PORT}`)
 })
 
+// ===================== \MODULE EMPLOYEE/ =====================
 app.get('/api/employee', async (req, res) => {
    const snapshot = await Employee.get()
    const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
@@ -186,5 +187,22 @@ app.post('/api/employee/update/active', async (req, res) => {
       })
    }
 })
+
+app.post('/api/employee/delete', async (req, res) => {
+   try {
+      const id = req.body.id
+      await Employee.doc(id).delete()
+      return res.status(200).json({
+         RespCode: 200,
+         RespMessage: 'Deletee Success'
+      })
+   } catch (error) {
+      return res.status(500).json({
+         RespCode: 500,
+         RespMessage: error.message
+      })
+   }
+})
+// ===================== \MODULE EMPLOYEE/ =====================
 
 module.exports = app
