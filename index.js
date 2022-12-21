@@ -40,16 +40,7 @@ app.get('/api/employee/by/:id', async (req, res) => {
 app.post('/api/employee/create', async (req, res) => {
    try {
       // Check that the request body is present and contains the expected data
-      if (
-         !req.body ||
-         !req.body.position_id ||
-         !req.body.nametitle_th ||
-         !req.body.nametitle_en ||
-         !req.body.firstname_en ||
-         !req.body.firstname_th ||
-         !req.body.lastname_en ||
-         !req.body.lastname_th
-      ) {
+      if (!req.body || !req.body.position_id || !req.body.firstname_en || !req.body.firstname_th || !req.body.lastname_en || !req.body.lastname_th) {
          return res.status(400).json({
             RespCode: 400,
             RespMessage: 'Bad request'
@@ -61,8 +52,8 @@ app.post('/api/employee/create', async (req, res) => {
          picture: req.body.picture || null,
          gender: req.body.gender || null,
          position_id: req.body.position_id,
-         nametitle_th: req.body.nametitle_th,
-         nametitle_en: req.body.nametitle_en,
+         nametitle_th: req.body.nametitle_th || null,
+         nametitle_en: req.body.nametitle_en || null,
          firstname_en: req.body.firstname_en,
          firstname_th: req.body.firstname_th,
          lastname_en: req.body.lastname_en,
@@ -110,16 +101,7 @@ app.post('/api/employee/create', async (req, res) => {
 
 app.post('/api/employee/update', async (req, res) => {
    try {
-      if (
-         !req.body ||
-         !req.body.position_id ||
-         !req.body.nametitle_th ||
-         !req.body.nametitle_en ||
-         !req.body.firstname_en ||
-         !req.body.firstname_th ||
-         !req.body.lastname_en ||
-         !req.body.lastname_th
-      ) {
+      if (!req.body || !req.body.position_id || !req.body.firstname_en || !req.body.firstname_th || !req.body.lastname_en || !req.body.lastname_th) {
          return res.status(400).json({
             RespCode: 400,
             RespMessage: 'Bad request'
@@ -131,8 +113,8 @@ app.post('/api/employee/update', async (req, res) => {
          picture: req.body.picture || null,
          gender: req.body.gender || null,
          position_id: req.body.position_id,
-         nametitle_th: req.body.nametitle_th,
-         nametitle_en: req.body.nametitle_en,
+         nametitle_th: req.body.nametitle_th || null,
+         nametitle_en: req.body.nametitle_en || null,
          firstname_en: req.body.firstname_en,
          firstname_th: req.body.firstname_th,
          lastname_en: req.body.lastname_en,
