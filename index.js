@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const Employee = require('./config')
+const { Employee, fireStorage } = require('./config')
 const app = express()
 const PORT = 4000
 
@@ -11,7 +11,7 @@ app.listen(PORT, () => {
    console.log(`API Listening on PORT ${PORT}`)
 })
 
-// ===================== \MODULE EMPLOYEE/ =====================
+// MODULE EMPLOYEE
 app.get('/api/employee', async (req, res) => {
    const snapshot = await Employee.get()
    const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
@@ -49,7 +49,7 @@ app.post('/api/employee/create', async (req, res) => {
 
       // Provide default values for optional properties
       const request = {
-         picture: req.body.picture || null,
+         // picture: req.body.picture || null,
          gender: req.body.gender || null,
          position_id: req.body.position_id,
          nametitle_th: req.body.nametitle_th || null,
@@ -75,14 +75,44 @@ app.post('/api/employee/create', async (req, res) => {
          date_create: new Date().toISOString()
       }
 
-      // Add the employee record
-      const result = await Employee.add(request)
+      if (req.body.picture_item) {
+         let storageRef = fireStorage.ref('images/' + fileName)
+         let uploadTask = storageRef.put(fileItem)
 
-      if (!result) {
-         return res.status(500).json({
-            RespCode: 500,
-            RespMessage: 'Error adding employee'
-         })
+         uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+               console.log(snapshot)
+               percentVal = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+               console.log(percentVal)
+            },
+            (error) => {
+               console.log('Error is ', error)
+            },
+            () => {
+               uploadTask.snapshot.ref.getDownloadURL().then(async (resultURL) => {
+                  const mergeRequest = Object.assign(request, { picture: resultURL })
+                  const result = await Employee.add(mergeRequest)
+
+                  if (!result) {
+                     return res.status(500).json({
+                        RespCode: 500,
+                        RespMessage: 'Error adding employee'
+                     })
+                  }
+               })
+            }
+         )
+      } else {
+         // Add the employee record
+         const result = await Employee.add(request)
+
+         if (!result) {
+            return res.status(500).json({
+               RespCode: 500,
+               RespMessage: 'Error adding employee'
+            })
+         }
       }
 
       // Return success response
@@ -185,6 +215,6 @@ app.post('/api/employee/delete', async (req, res) => {
       })
    }
 })
-// ===================== \MODULE EMPLOYEE/ =====================
+// MODULE EMPLOYEE
 
 module.exports = app

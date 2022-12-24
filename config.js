@@ -10,6 +10,7 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
-const db = firebase.firestore()
-const Employee = db.collection('Employee')
-module.exports = Employee
+const firestore = firebase.firestore()
+const fireStorage = firebase.storage()
+const Employee = firestore.collection('Employee')
+module.exports = { Employee, fireStorage }
