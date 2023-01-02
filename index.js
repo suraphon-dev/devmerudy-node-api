@@ -18,6 +18,38 @@ app.get('/api/employee', async (req, res) => {
    res.send(list)
 })
 
+app.get('/api/employee/code', async (req, res) => {
+   const snapshot = await Employee.get()
+   const list = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      picture: doc.data().picture,
+      gender: doc.data().gender,
+      position_id: doc.data().position_id,
+      nametitle_th: doc.data().nametitle_th,
+      nametitle_en: doc.data().nametitle_en,
+      firstname_en: doc.data().firstname_en,
+      firstname_th: doc.data().firstname_th,
+      lastname_en: doc.data().lastname_en,
+      lastname_th: doc.data().lastname_th,
+      nickname_th: doc.data().nickname_th,
+      nickname_en: doc.data().nickname_en,
+      skill: doc.data().skill,
+      university: doc.data().university,
+      group: doc.data().group,
+      branch: doc.data().branch,
+      line: doc.data().line,
+      phone: doc.data().phone,
+      email: doc.data().email,
+      email_reserve: doc.data().email_reserve,
+      date_birthday: doc.data().date_birthday,
+      date_start: doc.data().date_start,
+      status_active: doc.data().status_active,
+      code_id: doc.data().code_id,
+      level_skill: doc.data().level_skill
+   }))
+   res.send(list)
+})
+
 app.get('/api/employee/by/:id', async (req, res) => {
    try {
       const employeeRef = Employee.doc(req.params.id)
@@ -72,6 +104,9 @@ app.post('/api/employee/create', async (req, res) => {
          date_birthday: req.body.date_birthday || null,
          date_start: req.body.date_start || null,
          status_active: true,
+         code_id: req.body.code_id || null,
+         level_skill: req.body.level_skill || '',
+         address: req.body.address || null,
          date_create: new Date().toISOString()
       }
 
@@ -132,7 +167,10 @@ app.post('/api/employee/update', async (req, res) => {
          facebook: req.body.facebook || null,
          date_birthday: req.body.date_birthday || null,
          date_start: req.body.date_start || null,
-         status_active: req.body.status_active
+         status_active: req.body.status_active,
+         code_id: req.body.code_id || null,
+         level_skill: req.body.level_skill || '',
+         address: req.body.address || null
       }
 
       await Employee.doc(id).update(request)
