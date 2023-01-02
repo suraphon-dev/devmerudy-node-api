@@ -47,7 +47,9 @@ app.get('/api/employee/code', async (req, res) => {
       code_id: doc.data().code_id,
       level_skill: doc.data().level_skill
    }))
-   res.send(list)
+
+   const resultList = list.filter((x) => x.status_active)
+   res.send(resultList)
 })
 
 app.get('/api/employee/by/:id', async (req, res) => {
