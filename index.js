@@ -45,7 +45,8 @@ app.get('/api/employee/code', async (req, res) => {
       date_start: doc.data().date_start,
       status_active: doc.data().status_active,
       code_id: doc.data().code_id,
-      level_skill: doc.data().level_skill
+      level_skill: doc.data().level_skill,
+      lastpassword: doc.data().lastpassword
    }))
 
    const resultList = list.filter((x) => x.status_active)
@@ -109,6 +110,7 @@ app.post('/api/employee/create', async (req, res) => {
          code_id: req.body.code_id || null,
          level_skill: req.body.level_skill || '',
          address: req.body.address || null,
+         lastpassword: req.body.lastpassword || null,
          date_create: new Date().toISOString()
       }
 
@@ -172,7 +174,8 @@ app.post('/api/employee/update', async (req, res) => {
          status_active: req.body.status_active,
          code_id: req.body.code_id || null,
          level_skill: req.body.level_skill || '',
-         address: req.body.address || null
+         address: req.body.address || null,
+         lastpassword: req.body.lastpassword || null
       }
 
       await Employee.doc(id).update(request)
