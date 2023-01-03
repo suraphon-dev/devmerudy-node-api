@@ -228,6 +228,47 @@ app.post('/api/employee/delete', async (req, res) => {
       })
    }
 })
+
+app.post('/api/authuser', async (req, res) => {
+   try {
+      if (!req.body.u || !req.body.p) {
+         return res.status(400).json({
+            RespCode: 400,
+            RespMessage: 'Bad request'
+         })
+      }
+
+      const snapshot = await Employee.get()
+      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      const query = list.filter((x) => x.email.toLowerCase() == req.body.u.toLowerCase())
+
+      if (query.length > 0) {
+         const data = query[0]
+
+         if (req.body.p == data.lastpassword) {
+            return res.status(200).json({
+               RespCode: 200,
+               RespMessage: data
+            })
+         } else {
+            return res.status(404).json({
+               RespCode: 404,
+               RespMessage: 'เกิดข้อผิดพลาด'
+            })
+         }
+      } else {
+         return res.status(404).json({
+            RespCode: 404,
+            RespMessage: 'เกิดข้อผิดพลาด'
+         })
+      }
+   } catch (error) {
+      return res.status(500).json({
+         RespCode: 500,
+         RespMessage: error.message
+      })
+   }
+})
 // ===================== \MODULE EMPLOYEE/ =====================
 
 module.exports = app
